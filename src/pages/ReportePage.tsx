@@ -20,7 +20,7 @@ export const ReportePage = () => {
         fechaViaje: ''
     } as Query);
 
-    /* Obtener datos de aerolíneas, aeropuertos y pilotos. */
+    /* Obtener datos de aeropuertos. */
     useEffect(() => {
         aeropuertoService.obtenerAeropuertos()
             .then(value => {
@@ -31,24 +31,17 @@ export const ReportePage = () => {
         setCargando(true);
     }, []);
 
-    /* Obtener reportes. */
-    useEffect(() => {
-        if (!openModal && validForm) {
-            reporteService.obtenerReporte(form)
-                .then(value => {
-                    setReportes(value.data);
-                    setCargando(false);
-                    resetForm();
-                });
-
-            setCargando(true);
-        }
-    }, [openModal]);
-
     const enviar = function (e: React.FormEvent) {
         e.preventDefault();
+        reporteService.obtenerReporte(form)
+            .then(value => {
+                setReportes(value.data);
+                setCargando(false);
+                resetForm();
+            });
+
         setOpenModal(false);
-        console.log(form);
+        setCargando(true);
     }
 
     return (

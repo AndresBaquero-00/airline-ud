@@ -17,12 +17,13 @@ export class Service {
         });
     }
 
-    protected get(endpoint: string): Promise<Response> {
+    protected get(endpoint: string, params?: any): Promise<Response> {
         return new Promise((resolve, reject) => {
-            axios.get(`${this.api}/${endpoint}`)
-                .then(data => {
-                    resolve(data.data);
-                });
+            axios.get(`${this.api}/${endpoint}`, {
+                params,
+            }).then(data => {
+                resolve(data.data);
+            });
         });
     }
 }

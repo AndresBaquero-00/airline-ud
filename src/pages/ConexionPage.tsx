@@ -1,34 +1,31 @@
 import { useEffect, useMemo, useState } from "react";
 import { Box, Button, MenuItem, TextField, Typography } from "@mui/material";
+import swal from "sweetalert";
 
 import { useForm } from "../hooks";
-import { AerolineaService, AeropuertoService } from "../services";
+import { AerolineaService, AeropuertoService, PostService } from "../services";
 import { Loader } from "../components";
 import { FormLayout } from "../layouts";
-import { Data } from "../interfaces";
+import { ConnectionInfo, Data } from "../interfaces";
 
 export const ConexionPage = () => {
     const aerolineaService = useMemo(() => new AerolineaService(), []);
     const aeropuertoService = useMemo(() => new AeropuertoService(), []);
+    const postService = useMemo(() => new PostService(), []);
     const [cargando, setCargando] = useState(false);
     const [aerolineas, setAerolineas] = useState([] as Data[]);
     const [vuelosOrigen, setVuelosOrigen] = useState([] as string[]);
     const [vuelosDestino, setVuelosDestino] = useState([] as string[]);
     const [aeropuertosOrigen, setAeropuertosOrigen] = useState([] as Data[]);
     const [aeropuertosDestino, setAeropuertosDestino] = useState([] as Data[]);
-    const { form, changeForm, validForm } = useForm({
+    const { form, changeForm, validForm, resetForm } = useForm({
         aerolineaOrigen: '',
         aerolineaDestino: '',
         vueloOrigen: '',
         vueloDestino: '',
         aeropuertoOrigen: '',
         aeropuertoDestino: ''
-    });
-
-    const enviar = function (e: React.FormEvent) {
-        e.preventDefault();
-        console.log(form);
-    }
+    } as ConnectionInfo);
 
     /* Obtener aerolíneas registradas. */
     useEffect(() => {
@@ -70,7 +67,7 @@ export const ConexionPage = () => {
     /* Obtener aeropuertos por vuelo (origen). */
     useEffect(() => {
         if (form.vueloOrigen !== '') {
-            aeropuertoService.obtenerAeropuertosVuelo(form.vueloOrigen)
+            aeropuertoService.obtenerAeropuertosVuelo(form.vueloOrigen, form.aerolineaOrigen)
                 .then(value => {
                     setCargando(false);
                     setAeropuertosOrigen(value.data);
@@ -83,7 +80,7 @@ export const ConexionPage = () => {
     /* Obtener aeropuertos por vuelo (destino). */
     useEffect(() => {
         if (form.vueloDestino !== '') {
-            aeropuertoService.obtenerAeropuertosVuelo(form.vueloDestino)
+            aeropuertoService.obtenerAeropuertosVuelo(form.vueloDestino, form.aerolineaDestino)
                 .then(value => {
                     setCargando(false);
                     setAeropuertosDestino(value.data);
@@ -92,6 +89,16 @@ export const ConexionPage = () => {
             setCargando(true);
         }
     }, [form.vueloDestino]);
+
+    const enviar = function (e: React.FormEvent) {
+        e.preventDefault();
+        postService.crearConexion(form)
+            .then(value => {
+                setCargando(false);
+                resetForm();
+                swal('Registro exitoso', 'La conexión ha sido creada satisfactoriamente', 'success');
+            });
+    }
 
     return (
         <FormLayout onSubmit={enviar}>
@@ -259,7 +266,7 @@ export const ConexionPage = () => {
                     borderRadius: '50px'
                 }}
             >
-                Crear Vuelo
+                Crear Conexión
             </Button>
         </FormLayout>
     )

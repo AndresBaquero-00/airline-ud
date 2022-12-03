@@ -43,16 +43,16 @@ export const InfoAeropuertos = ({ show, reports }: Props) => {
                                 {report.airport}
                             </Typography>
                             <Typography>
-                                <strong>Ciudad: &nbsp;</strong>
-                                {report.city}
+                                <strong>{report.city.type}: &nbsp;</strong>
+                                {report.city.name}
                             </Typography>
                             <Typography>
                                 <strong>{report.division.type}: &nbsp;</strong>
                                 {report.division.name}
                             </Typography>
                             <Typography>
-                                <strong>País: &nbsp;</strong>
-                                {report.country}
+                                <strong>{report.country.type}: &nbsp;</strong>
+                                {report.country.name}
                             </Typography>
                             <Typography>
                                 <strong>Fecha: &nbsp;</strong>

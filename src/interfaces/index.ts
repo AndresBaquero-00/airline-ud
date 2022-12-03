@@ -6,7 +6,7 @@ export interface RouteInfo {
     element: JSX.Element;
 }
 
-export interface Response<T = unknown> {
+export interface Response<T = any> {
     code: string;
     state: boolean;
     message: string;
@@ -24,25 +24,36 @@ export interface Query {
     fechaViaje: string;
 }
 
-export interface Report {
-    flight: string;
-    airline: string;
-    airport: string;
-    city: string;
-    country: string;
-    date: string;
-    pilot?: string;
-    division: {
-        type: string;
-        name: string;
-    }
-}
-
 export interface SegmentInfo {
     aerolinea: string;
     numeroVuelo: string;
-    fechaVuelo: string;
+    fecha: string;
     piloto: string;
     numSegmentos: string;
     aeropuertos: string[];
+}
+
+export interface ConnectionInfo {
+    aerolineaOrigen: string;
+    aerolineaDestino: string;
+    vueloOrigen: string;
+    vueloDestino: string;
+    aeropuertoOrigen: string;
+    aeropuertoDestino: string;
+}
+
+export interface Report {
+    airline: string;
+    flight: string;
+    airport: string;
+    city: Place;
+    division: Place;
+    country: Place;
+    date: string;
+    pilot?: string;
+}
+
+export interface Place {
+    name: string;
+    type: string;
 }

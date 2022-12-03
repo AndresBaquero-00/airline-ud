@@ -1,8 +1,9 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Box, Button, MenuItem, Typography, TextField } from "@mui/material";
+import swal from "sweetalert";
 
 import { useForm } from "../hooks";
-import { AeropuertoService, AerolineaService, PilotoService, ReporteService } from "../services";
+import { AeropuertoService, AerolineaService, PilotoService, ReporteService, PostService } from "../services";
 import { CreaSegmentos, InfoAeropuertos, Loader } from "../components";
 import { FormLayout } from "../layouts";
 import { Data, Report, SegmentInfo } from "../interfaces";
@@ -12,16 +13,17 @@ export const VueloPage = () => {
     const aeropuertoService = useMemo(() => new AeropuertoService(), []);
     const pilotoService = useMemo(() => new PilotoService(), []);
     const reporteService = useMemo(() => new ReporteService(), []);
+    const postService = useMemo(() => new PostService(), []);
     const [cargando, setCargando] = useState(false);
     const [muestraSegmentos, setMuestraSegmentos] = useState(false);
     const [aerolineas, setAerolineas] = useState([] as Data[]);
     const [aeropuertos, setAeropuertos] = useState([] as Data[]);
     const [pilotos, setPilotos] = useState([] as Data[]);
     const [reportes, setReportes] = useState([] as Report[]);
-    const { form, changeForm, setDataForm, validForm } = useForm({
+    const { form, changeForm, setDataForm, validForm, resetForm } = useForm({
         aerolinea: '',
         numeroVuelo: '',
-        fechaVuelo: '',
+        fecha: '',
         piloto: '',
         numSegmentos: '',
         aeropuertos: [] as string[]
@@ -75,11 +77,18 @@ export const VueloPage = () => {
                     setReportes(value.data);
                 });
         }
-    }, [validForm]);
+    }, [validForm, form]);
 
     const enviar = function (e: React.FormEvent) {
         e.preventDefault();
-        console.log(form);
+        postService.crearSegmento(form)
+            .then(value => {
+                setCargando(false);
+                resetForm();
+                swal('Registro exitoso', 'El segmento ha sido creado satisfactoriamente', 'success');
+            });
+        
+        setCargando(true);
     }
 
     return (
@@ -131,8 +140,8 @@ export const VueloPage = () => {
                     variant="outlined"
                     type="date"
                     label="Fecha de Vuelo*"
-                    name="fechaVuelo"
-                    value={form.fechaVuelo}
+                    name="fecha"
+                    value={form.fecha}
                     onChange={changeForm}
                     InputLabelProps={{
                         shrink: true
