@@ -53,6 +53,11 @@ export interface Report {
     pilot?: string;
 }
 
+export interface Itinerario {
+    type?: string;
+    reports?: Report[];
+}
+
 export interface Place {
     name: string;
     type: string;

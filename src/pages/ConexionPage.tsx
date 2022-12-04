@@ -96,7 +96,11 @@ export const ConexionPage = () => {
             .then(value => {
                 setCargando(false);
                 resetForm();
-                swal('Registro exitoso', 'La conexión ha sido creada satisfactoriamente', 'success');
+                if (value.state) {
+                    swal('Registro exitoso', 'La conexión ha sido creada satisfactoriamente', 'success');
+                } else {
+                    swal('Error', value.message, 'error');
+                }
             });
     }
 

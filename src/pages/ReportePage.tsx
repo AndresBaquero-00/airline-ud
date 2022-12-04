@@ -1,11 +1,11 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Box, Button, Fab, MenuItem, Modal, TextField, Typography } from "@mui/material";
+import { Box, Button, Fab, MenuItem, Modal, TextField, Typography, useMediaQuery } from "@mui/material";
 import { Search } from "@mui/icons-material";
 
 import { useForm } from "../hooks";
 import { AeropuertoService, ReporteService } from "../services";
-import { Data, Query, Report } from "../interfaces";
-import { Loader } from "../components";
+import { Data, Itinerario, Query } from "../interfaces";
+import { Loader, MuestraItinerarios } from "../components";
 
 export const ReportePage = () => {
     const aeropuertoService = useMemo(() => new AeropuertoService(), []);
@@ -13,7 +13,7 @@ export const ReportePage = () => {
     const [cargando, setCargando] = useState(false);
     const [openModal, setOpenModal] = useState(false);
     const [aeropuertos, setAeropuertos] = useState([] as Data[]);
-    const [reportes, setReportes] = useState([] as Report[]);
+    const [reportes, setReportes] = useState([] as Itinerario[][]);
     const { form, changeForm, validForm, resetForm } = useForm({
         aeropuertoOrigen: '',
         aeropuertoDestino: '',
@@ -35,7 +35,8 @@ export const ReportePage = () => {
         e.preventDefault();
         reporteService.obtenerReporte(form)
             .then(value => {
-                setReportes(value.data);
+                console.log(value.data);
+                setReportes(value.data as Itinerario[][]);
                 setCargando(false);
                 resetForm();
             });
@@ -49,7 +50,8 @@ export const ReportePage = () => {
             sx={{
                 width: '100%',
                 height: '100%',
-                position: 'relative'
+                position: 'relative',
+                overflowY: 'auto'
             }}
         >
             <Loader show={cargando} />
@@ -66,6 +68,7 @@ export const ReportePage = () => {
                     No hay reportes para mostrar.
                 </Typography>
             </Box>
+            <MuestraItinerarios reportes={reportes} />
             <Modal
                 open={openModal}
                 onClose={() => setOpenModal(false)}
@@ -169,9 +172,9 @@ export const ReportePage = () => {
                 size="large"
                 onClick={() => setOpenModal(true)}
                 sx={{
-                    position: 'absolute',
+                    position: 'fixed',
                     right: '25px',
-                    bottom: '25px'
+                    bottom: '80px'
                 }}
             >
                 <Search />

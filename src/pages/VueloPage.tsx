@@ -77,7 +77,7 @@ export const VueloPage = () => {
                     setReportes(value.data);
                 });
         }
-    }, [validForm, form]);
+    }, [validForm]);
 
     const enviar = function (e: React.FormEvent) {
         e.preventDefault();
