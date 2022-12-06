@@ -10,6 +10,7 @@ import { Loader, MuestraItinerarios } from "../components";
 export const ReportePage = () => {
     const aeropuertoService = useMemo(() => new AeropuertoService(), []);
     const reporteService = useMemo(() => new ReporteService(), []);
+    const media = useMediaQuery('(max-width: 600px)');
     const [cargando, setCargando] = useState(false);
     const [openModal, setOpenModal] = useState(false);
     const [aeropuertos, setAeropuertos] = useState([] as Data[]);
@@ -174,7 +175,7 @@ export const ReportePage = () => {
                 sx={{
                     position: 'fixed',
                     right: '25px',
-                    bottom: '80px'
+                    bottom: media ? '100px' : '80px'
                 }}
             >
                 <Search />

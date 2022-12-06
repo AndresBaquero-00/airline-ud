@@ -18,7 +18,7 @@ export const ConexionPage = () => {
     const [vuelosDestino, setVuelosDestino] = useState([] as string[]);
     const [aeropuertosOrigen, setAeropuertosOrigen] = useState([] as Data[]);
     const [aeropuertosDestino, setAeropuertosDestino] = useState([] as Data[]);
-    const { form, changeForm, validForm, resetForm } = useForm({
+    const { form, changeForm, validForm, resetForm, setDataForm } = useForm({
         aerolineaOrigen: '',
         aerolineaDestino: '',
         vueloOrigen: '',
@@ -45,6 +45,8 @@ export const ConexionPage = () => {
                 .then(value => {
                     setCargando(false);
                     setVuelosOrigen(value.data);
+                    setAeropuertosOrigen([] as Data[]);
+                    setDataForm(['vueloOrigen', 'aeropuertoOrigen'], ['', '']);
                 });
 
             setCargando(true);
@@ -58,6 +60,8 @@ export const ConexionPage = () => {
                 .then(value => {
                     setCargando(false);
                     setVuelosDestino(value.data);
+                    setAeropuertosDestino([] as Data[]);
+                    setDataForm(['vueloDestino', 'aeropuertoDestino'], ['', '']);
                 });
 
             setCargando(true);
@@ -71,6 +75,7 @@ export const ConexionPage = () => {
                 .then(value => {
                     setCargando(false);
                     setAeropuertosOrigen(value.data);
+                    setDataForm(['aeropuertoOrigen'], ['', '']);
                 });
 
             setCargando(true);
@@ -84,6 +89,7 @@ export const ConexionPage = () => {
                 .then(value => {
                     setCargando(false);
                     setAeropuertosDestino(value.data);
+                    setDataForm(['aeropuertoDestino'], ['', '']);
                 });
 
             setCargando(true);

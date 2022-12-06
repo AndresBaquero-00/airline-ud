@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { BottomNavigation, BottomNavigationAction } from "@mui/material";
+import { BottomNavigation, BottomNavigationAction, useMediaQuery } from "@mui/material";
 
 import { RouteInfo } from "../interfaces";
 
@@ -9,7 +9,8 @@ type Props = {
 }
 
 export const BarNavigation = ({ routes }: Props) => {
-    const navigate = useNavigate(); 
+    const media = useMediaQuery('(max-width: 600px)');
+    const navigate = useNavigate();
     const location = useLocation();
     const [value, setValue] = useState(
         routes.findIndex(({ path }) => path === location.pathname)
@@ -20,17 +21,17 @@ export const BarNavigation = ({ routes }: Props) => {
             value={value}
             showLabels
             onChange={(e, v) => setValue(v)}
-            sx={{ 
-                height: '60px',
+            sx={{
+                height: media ? '80px' : '60px',
                 backgroundColor: 'primary.main'
             }}
         >
             {
                 routes.map(({ label, icon, path }) => (
-                    <BottomNavigationAction 
-                        key={label} 
+                    <BottomNavigationAction
+                        key={label}
                         icon={icon}
-                        label={label} 
+                        label={label}
                         onClick={() => {
                             navigate(path, { replace: true });
                         }}

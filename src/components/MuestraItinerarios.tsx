@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import { Box, Typography, useMediaQuery } from "@mui/material";
 
 import { Itinerario } from "../interfaces";
@@ -20,6 +21,7 @@ export const MuestraItinerarios = ({ reportes }: Props) => {
             {
                 reportes.map((itinerario, index) => (
                     <Box
+                        key={index}
                         sx={{
                             width: '90%',
                             margin: '0 auto',
@@ -41,7 +43,7 @@ export const MuestraItinerarios = ({ reportes }: Props) => {
                         >
                             {
                                 itinerario.map((reporte, index) => (
-                                    <>
+                                    <Fragment key={`Fragment-${index}`}>
                                         <Box
                                             sx={{
                                                 display: 'flex',
@@ -66,6 +68,7 @@ export const MuestraItinerarios = ({ reportes }: Props) => {
                                             {
                                                 reporte.reports?.map((report, index) => (
                                                     <Box
+                                                        key={`Reporte-${index}`}
                                                         sx={{
                                                             flex: '1',
                                                             backgroundColor: 'rgba(0, 175, 181, 0.1)',
@@ -78,7 +81,7 @@ export const MuestraItinerarios = ({ reportes }: Props) => {
                                                 ))
                                             }
                                         </Box>
-                                    </>
+                                    </Fragment>
                                 ))
                             }
                         </Box>

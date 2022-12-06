@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { ThemeProvider, Box } from "@mui/material";
+import { ThemeProvider, Box, useMediaQuery } from "@mui/material";
 import { Home, Flight, ConnectingAirports, Description } from "@mui/icons-material";
 
 import { BarNavigation } from "./components";
@@ -37,29 +37,31 @@ const routes: RouteInfo[] = [
 
 
 export const App = () => {
+    const media = useMediaQuery('(max-width: 600px)');
+
     return (
         <BrowserRouter>
             <ThemeProvider theme={appTheme}>
                 <Box
-                    component="main" 
-                    sx={{ 
-                        height: 'calc(100vh - 60px)',
+                    component="main"
+                    sx={{
+                        height: media ? 'calc(100vh - 80px)' : 'calc(100vh - 60px)',
                         width: '100%',
                     }}
                 >
                     <Routes>
                         {
                             routes.map(({ path, element }) => (
-                                <Route 
-                                    key={path} 
-                                    path={path} 
+                                <Route
+                                    key={path}
+                                    path={path}
                                     element={element}
                                 />
                             ))
                         }
 
-                        <Route 
-                            path="/*" 
+                        <Route
+                            path="/*"
                             element={<Navigate to="/" />}
                         />
                     </Routes>
