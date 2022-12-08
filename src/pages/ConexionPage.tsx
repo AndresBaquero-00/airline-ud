@@ -6,14 +6,14 @@ import { useForm } from "../hooks";
 import { AerolineaService, AeropuertoService, PostService } from "../services";
 import { Loader } from "../components";
 import { FormLayout } from "../layouts";
-import { ConnectionInfo, Data } from "../interfaces";
+import { ConnectionInfo, Data, AirlinesResponse } from "../interfaces";
 
 export const ConexionPage = () => {
     const aerolineaService = useMemo(() => new AerolineaService(), []);
     const aeropuertoService = useMemo(() => new AeropuertoService(), []);
     const postService = useMemo(() => new PostService(), []);
     const [cargando, setCargando] = useState(false);
-    const [aerolineas, setAerolineas] = useState([] as Data[]);
+    const [aerolineas, setAerolineas] = useState([] as AirlinesResponse[]);
     const [vuelosOrigen, setVuelosOrigen] = useState([] as string[]);
     const [vuelosDestino, setVuelosDestino] = useState([] as string[]);
     const [aeropuertosOrigen, setAeropuertosOrigen] = useState([] as Data[]);
@@ -123,10 +123,10 @@ export const ConexionPage = () => {
                 {
                     aerolineas.map((airline, index) => (
                         <MenuItem
-                            key={index}
-                            value={airline.id}
+                            key={airline.airlineCode}
+                            value={airline.airlineCode}
                         >
-                            {airline.name}
+                            {airline.airlineName}
                         </MenuItem>
                     ))
                 }
@@ -198,10 +198,10 @@ export const ConexionPage = () => {
                 {
                     aerolineas.map((airline, index) => (
                         <MenuItem
-                            key={index}
-                            value={airline.id}
+                            key={airline.airlineCode}
+                            value={airline.airlineCode}
                         >
-                            {airline.name}
+                            {airline.airlineName}
                         </MenuItem>
                     ))
                 }

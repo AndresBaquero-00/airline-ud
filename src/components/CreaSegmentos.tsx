@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { Box, MenuItem, TextField, Typography } from "@mui/material";
 
-import { Data } from "../interfaces";
+import { Data,AirPortResponse } from "../interfaces";
 
 type Props = {
     show: boolean;
     numSegmentos: string;
-    aeropuertos: Data[];
+    aeropuertos: AirPortResponse[];
     onChange: Function;
 }
 
@@ -51,12 +51,12 @@ export const CreaSegmentos = ({ show, numSegmentos, aeropuertos, onChange }: Pro
                         }}
                     >
                         {
-                            aeropuertos.map((airport, index) => (
+                            aeropuertos.map((airport) => (
                                 <MenuItem
-                                    key={index}
-                                    value={airport.id}
+                                    key={airport.airportCode}
+                                    value={airport.airportCode}
                                 >
-                                    {airport.name}
+                                    {airport.airportName}
                                 </MenuItem>
                             ))
                         }

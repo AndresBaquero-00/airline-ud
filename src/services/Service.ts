@@ -6,6 +6,7 @@ export class Service {
 
     public constructor() {
         this.api = import.meta.env.VITE_API_URL;
+        console.log(this.api);
     }
 
     protected post(endpoint: string, data: any): Promise<Response> {

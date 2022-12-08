@@ -18,6 +18,25 @@ export interface Data {
     name: string;
 }
 
+export interface AirlinesResponse{
+    airlineName:string;
+    airlineCode:string;
+}
+
+export interface AirPortResponse{
+    airportName:string;
+    airportCode:string;
+}
+
+export interface PilotResponse{
+    pilotName:string;
+    pilotNumber:string;
+}
+
+export interface GenerationTraceResponse{
+    trace:string;
+}
+
 export interface Query {
     aeropuertoOrigen: string;
     aeropuertoDestino: string;
@@ -31,6 +50,15 @@ export interface SegmentInfo {
     piloto: string;
     numSegmentos: string;
     aeropuertos: string[];
+}
+
+export interface SegmentRequest {
+    airlineCode:string;
+    flightNumber:string;
+    flightDate:string;
+    pilotLicense:string;
+    numberOfSgments:string;
+    airportCodes:string[];
 }
 
 export interface ConnectionInfo {

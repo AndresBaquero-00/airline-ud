@@ -6,7 +6,7 @@ import { useForm } from "../hooks";
 import { AeropuertoService, AerolineaService, PilotoService, ReporteService, PostService } from "../services";
 import { CreaSegmentos, InfoAeropuertos, Loader } from "../components";
 import { FormLayout } from "../layouts";
-import { Data, Report, SegmentInfo } from "../interfaces";
+import { Report, SegmentInfo, PilotResponse, AirlinesResponse, AirPortResponse,SegmentRequest } from "../interfaces";
 
 export const VueloPage = () => {
     const aerolineaService = useMemo(() => new AerolineaService(), []);
@@ -16,9 +16,9 @@ export const VueloPage = () => {
     const postService = useMemo(() => new PostService(), []);
     const [cargando, setCargando] = useState(false);
     const [muestraSegmentos, setMuestraSegmentos] = useState(false);
-    const [aerolineas, setAerolineas] = useState([] as Data[]);
-    const [aeropuertos, setAeropuertos] = useState([] as Data[]);
-    const [pilotos, setPilotos] = useState([] as Data[]);
+    const [aerolineas, setAerolineas] = useState([] as AirlinesResponse[]);
+    const [aeropuertos, setAeropuertos] = useState([] as AirPortResponse[]);
+    const [pilotos, setPilotos] = useState([] as PilotResponse[]);
     const [reportes, setReportes] = useState([] as Report[]);
     const { form, changeForm, setDataForm, validForm, resetForm } = useForm({
         aerolinea: '',
@@ -59,10 +59,10 @@ export const VueloPage = () => {
     useEffect(() => {
         if (form.aerolinea !== '') {
             setCargando(true);
-            aerolineaService.obtenerConsecutivo(form.aerolinea)
+            aerolineaService.crearConsecutivo(form.aerolinea)
                 .then(value => {
                     setCargando(false);
-                    setDataForm(['numeroVuelo'], [value.data]);
+                    setDataForm(['numeroVuelo'], [value.data.trace]);
                 });
         }
     }, [form.aerolinea]);
@@ -108,12 +108,12 @@ export const VueloPage = () => {
                 onChange={changeForm}
             >
                 {
-                    aerolineas.map((airline, index) => (
+                    aerolineas.map((airline) => (
                         <MenuItem
-                            key={index}
-                            value={airline.id}
+                            key={airline.airlineCode}
+                            value={airline.airlineCode}
                         >
-                            {airline.name}
+                            {airline.airlineName}
                         </MenuItem>
                     ))
                 }
@@ -169,9 +169,9 @@ export const VueloPage = () => {
                         pilotos.map((pilot, index) => (
                             <MenuItem
                                 key={index}
-                                value={pilot.id}
+                                value={pilot.pilotNumber}
                             >
-                                {pilot.name}
+                                {pilot.pilotName}
                             </MenuItem>
                         ))
                     }
