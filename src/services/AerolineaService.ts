@@ -1,4 +1,4 @@
-import { Data, Response, AirlinesResponse, GenerationTraceResponse } from "../interfaces";
+import {  Response, AirlinesResponse, GenerationTraceResponse,FlightsByAirline } from "../interfaces";
 import { Service } from "./Service";
 
 export class AerolineaService extends Service {
@@ -13,7 +13,7 @@ export class AerolineaService extends Service {
         });
     }
 
-    public obtenerVuelos(airlineCode: string): Promise<Response<string[]>> {
+    public obtenerVuelos(airlineCode: string): Promise<Response<FlightsByAirline[]>> {
         return this.get(`airline/flights`, {
             airlineCode
         });

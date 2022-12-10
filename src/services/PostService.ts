@@ -1,18 +1,14 @@
 import { Service } from "./Service";
-import { ConnectionInfo, Response,SegmentRequest } from "../interfaces";
+import { Response, SegmentRequest, ConnectionRequest } from "../interfaces";
 
 export class PostService extends Service {
 
     public crearSegmento(data: SegmentRequest): Promise<Response> {
-        return this.post('program/segment', {
-            segmentInfo: data
-        });
+        return this.post('program/segment', data);
     }
 
-    public crearConexion(data: ConnectionInfo): Promise<Response> {
-        return this.post('program/connection', {
-            connectionInfo: data
-        });
+    public crearConexion(data: ConnectionRequest): Promise<Response> {
+        return this.post('program/connection',data);
     }
 
 }

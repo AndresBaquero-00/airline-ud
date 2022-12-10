@@ -6,7 +6,7 @@ import { useForm } from "../hooks";
 import { AeropuertoService, AerolineaService, PilotoService, ReporteService, PostService } from "../services";
 import { CreaSegmentos, InfoAeropuertos, Loader } from "../components";
 import { FormLayout } from "../layouts";
-import { Report, SegmentInfo, PilotResponse, AirlinesResponse, AirPortResponse,SegmentRequest } from "../interfaces";
+import { Report, PilotResponse, AirlinesResponse, AirPortResponse, SegmentRequest } from "../interfaces";
 
 export const VueloPage = () => {
     const aerolineaService = useMemo(() => new AerolineaService(), []);
@@ -68,7 +68,7 @@ export const VueloPage = () => {
     }, [form.airlineCode]);
 
     /* Obtener reporte de segmentos ingresados. */
-    useEffect(() => {
+   /* useEffect(() => {
         if (validForm) {
             setCargando(true);
             reporteService.obtenerReporte(form)
@@ -77,7 +77,7 @@ export const VueloPage = () => {
                     setReportes(value.data);
                 });
         }
-    }, [validForm, form]);
+    }, [validForm]);*/
 
     const enviar = function (e: React.FormEvent) {
         e.preventDefault();

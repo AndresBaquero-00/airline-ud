@@ -6,7 +6,7 @@ import { useForm } from "../hooks";
 import { AerolineaService, AeropuertoService, PostService } from "../services";
 import { Loader } from "../components";
 import { FormLayout } from "../layouts";
-import { ConnectionInfo, Data, AirlinesResponse } from "../interfaces";
+import { ConnectionInfo, Data, AirlinesResponse, ConnectionRequest, FlightsByAirline } from "../interfaces";
 
 export const ConexionPage = () => {
     const aerolineaService = useMemo(() => new AerolineaService(), []);
@@ -14,18 +14,18 @@ export const ConexionPage = () => {
     const postService = useMemo(() => new PostService(), []);
     const [cargando, setCargando] = useState(false);
     const [aerolineas, setAerolineas] = useState([] as AirlinesResponse[]);
-    const [vuelosOrigen, setVuelosOrigen] = useState([] as string[]);
-    const [vuelosDestino, setVuelosDestino] = useState([] as string[]);
+    const [vuelosOrigen, setVuelosOrigen] = useState([] as FlightsByAirline[]);
+    const [vuelosDestino, setVuelosDestino] = useState([] as FlightsByAirline[]);
     const [aeropuertosOrigen, setAeropuertosOrigen] = useState([] as Data[]);
     const [aeropuertosDestino, setAeropuertosDestino] = useState([] as Data[]);
-    const { form, changeForm, validForm, resetForm } = useForm({
-        aerolineaOrigen: '',
-        aerolineaDestino: '',
-        vueloOrigen: '',
-        vueloDestino: '',
-        aeropuertoOrigen: '',
-        aeropuertoDestino: ''
-    } as ConnectionInfo);
+    const { form, changeForm, validForm, resetForm, setDataForm } = useForm({
+        airlineOrigin: '',
+        airlineDestiny: '',
+        flightOrigin: '',
+        flightDestiny: '',
+        airportOrigin: '',
+        airportDestiny: ''
+    } as ConnectionRequest);
 
     /* Obtener aerolíneas registradas. */
     useEffect(() => {
@@ -40,55 +40,61 @@ export const ConexionPage = () => {
 
     /* Obtener vuelos por aerolínea (origen). */
     useEffect(() => {
-        if (form.aerolineaOrigen !== '') {
-            aerolineaService.obtenerVuelos(form.aerolineaOrigen)
+        if (form.airlineOrigin !== '') {
+            aerolineaService.obtenerVuelos(form.airlineOrigin)
                 .then(value => {
                     setCargando(false);
                     setVuelosOrigen(value.data);
+                    setAeropuertosOrigen([] as Data[]);
+                    setDataForm(['flightOrigin', 'airportOrigin'], ['', '']);
                 });
 
             setCargando(true);
         }
-    }, [form.aerolineaOrigen]);
+    }, [form.airlineOrigin]);
 
     /* Obtener vuelos por aerolínea (destino). */
     useEffect(() => {
-        if (form.aerolineaDestino !== '') {
-            aerolineaService.obtenerVuelos(form.aerolineaDestino)
+        if (form.airlineDestiny !== '') {
+            aerolineaService.obtenerVuelos(form.airlineDestiny)
                 .then(value => {
                     setCargando(false);
                     setVuelosDestino(value.data);
+                    setAeropuertosDestino([] as Data[]);
+                    setDataForm(['flightDestiny', 'airportDestiny'], ['', '']);
                 });
 
             setCargando(true);
         }
-    }, [form.aerolineaDestino]);
+    }, [form.airlineDestiny]);
 
     /* Obtener aeropuertos por vuelo (origen). */
     useEffect(() => {
-        if (form.vueloOrigen !== '') {
-            aeropuertoService.obtenerAeropuertosVuelo(form.vueloOrigen, form.aerolineaOrigen)
+        if (form.flightOrigin !== '') {
+            aeropuertoService.obtenerAeropuertosVuelo(form.flightOrigin, form.airlineOrigin)
                 .then(value => {
                     setCargando(false);
                     setAeropuertosOrigen(value.data);
+                    setDataForm(['aeropuertoOrigen'], ['', '']);
                 });
 
             setCargando(true);
         }
-    }, [form.vueloOrigen]);
+    }, [form.flightOrigin]);
 
     /* Obtener aeropuertos por vuelo (destino). */
     useEffect(() => {
-        if (form.vueloDestino !== '') {
-            aeropuertoService.obtenerAeropuertosVuelo(form.vueloDestino, form.aerolineaDestino)
+        if (form.flightDestiny !== '') {
+            aeropuertoService.obtenerAeropuertosVuelo(form.flightDestiny, form.airlineDestiny)
                 .then(value => {
                     setCargando(false);
                     setAeropuertosDestino(value.data);
+                    setDataForm(['aeropuertoDestino'], ['', '']);
                 });
 
             setCargando(true);
         }
-    }, [form.vueloDestino]);
+    }, [form.flightDestiny]);
 
     const enviar = function (e: React.FormEvent) {
         e.preventDefault();
@@ -96,7 +102,11 @@ export const ConexionPage = () => {
             .then(value => {
                 setCargando(false);
                 resetForm();
-                swal('Registro exitoso', 'La conexión ha sido creada satisfactoriamente', 'success');
+                if (value.state) {
+                    swal('Registro exitoso', 'La conexión ha sido creada satisfactoriamente', 'success');
+                } else {
+                    swal('Error', value.message, 'error');
+                }
             });
     }
 
@@ -116,14 +126,14 @@ export const ConexionPage = () => {
                 variant="outlined"
                 label="Aerolínea*"
                 helperText="Seleccione la aerolínea."
-                name="aerolineaOrigen"
-                value={form.aerolineaOrigen}
+                name="airlineOrigin"
+                value={form.airlineOrigin}
                 onChange={changeForm}
             >
                 {
                     aerolineas.map((airline, index) => (
                         <MenuItem
-                            key={airline.airlineCode}
+                            key={index}
                             value={airline.airlineCode}
                         >
                             {airline.airlineName}
@@ -144,17 +154,17 @@ export const ConexionPage = () => {
                     variant="outlined"
                     label="Vuelo*"
                     helperText="Seleccione el número de vuelo."
-                    name="vueloOrigen"
-                    value={form.vueloOrigen}
+                    name="flightOrigin"
+                    value={form.flightOrigin}
                     onChange={changeForm}
                 >
                     {
                         vuelosOrigen.map((flight, index) => (
                             <MenuItem
                                 key={index}
-                                value={flight}
+                                value={flight.flightNumber}
                             >
-                                {flight}
+                                {flight.flightNumber} - {flight.airlineCode}
                             </MenuItem>
                         ))
                     }
@@ -165,8 +175,8 @@ export const ConexionPage = () => {
                     variant="outlined"
                     label="Aeropuerto*"
                     helperText="Seleccione el aeropuerto."
-                    name="aeropuertoOrigen"
-                    value={form.aeropuertoOrigen}
+                    name="airportOrigin"
+                    value={form.airportOrigin}
                     onChange={changeForm}
                 >
                     {
@@ -191,8 +201,8 @@ export const ConexionPage = () => {
                 variant="outlined"
                 label="Aerolínea*"
                 helperText="Seleccione la aerolínea."
-                name="aerolineaDestino"
-                value={form.aerolineaDestino}
+                name="airlineDestiny"
+                value={form.airlineDestiny}
                 onChange={changeForm}
             >
                 {
@@ -219,17 +229,17 @@ export const ConexionPage = () => {
                     variant="outlined"
                     label="Vuelo*"
                     helperText="Seleccione el número de vuelo."
-                    name="vueloDestino"
-                    value={form.vueloDestino}
+                    name="flightDestiny"
+                    value={form.flightDestiny}
                     onChange={changeForm}
                 >
                     {
                         vuelosDestino.map((flight, index) => (
                             <MenuItem
                                 key={index}
-                                value={flight}
+                                value={flight.flightNumber}
                             >
-                                {flight}
+                                {flight.flightNumber} - {flight.airlineCode}
                             </MenuItem>
                         ))
                     }
@@ -240,8 +250,8 @@ export const ConexionPage = () => {
                     variant="outlined"
                     label="Aeropuerto*"
                     helperText="Seleccione el aeropuerto."
-                    name="aeropuertoDestino"
-                    value={form.aeropuertoDestino}
+                    name="airportDestiny"
+                    value={form.airportDestiny}
                     onChange={changeForm}
                 >
                     {

@@ -28,6 +28,7 @@ export interface AirPortResponse{
     airportCode:string;
 }
 
+
 export interface PilotResponse{
     pilotName:string;
     pilotNumber:string;
@@ -35,6 +36,11 @@ export interface PilotResponse{
 
 export interface GenerationTraceResponse{
     trace:string;
+}
+
+export interface FlightsByAirline{
+    flightNumber:string;
+    airlineCode:string;
 }
 
 export interface Query {
@@ -70,6 +76,15 @@ export interface ConnectionInfo {
     aeropuertoDestino: string;
 }
 
+export interface ConnectionRequest{
+    airlineOrigin: string;
+    airlineDestiny: string;
+    flightOrigin: string;
+    flightDestiny: string;
+    airportOrigin: string;
+    airportDestiny: string;
+}
+
 export interface Report {
     airline: string;
     flight: string;
@@ -84,4 +99,9 @@ export interface Report {
 export interface Place {
     name: string;
     type: string;
+}
+
+export interface Itinerario {
+    type?: string;
+    reports?: Report[];
 }

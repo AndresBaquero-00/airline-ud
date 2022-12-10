@@ -7,7 +7,7 @@ export class AeropuertoService extends Service {
         return this.get('airport/all');
     }
 
-    public obtenerAeropuertosVuelo(flightNumber: string, airlineCode: string): Promise<Response<Data[]>> {
+    public obtenerAeropuertosVuelo(flightNumber: string, airlineCode: string): Promise<Response<AirPortResponse[]>> {
         return this.get('airport/flight', {
             flightNumber,
             airlineCode
