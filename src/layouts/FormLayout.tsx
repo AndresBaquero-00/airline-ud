@@ -22,6 +22,7 @@ export const FormLayout = ({ onSubmit, children }: Props) => {
                     component="form"
                     autoComplete="off"
                     onSubmit={onSubmit}
+                    method="POST"
                     sx={{
                         width: '90%',
                         maxWidth: '600px',

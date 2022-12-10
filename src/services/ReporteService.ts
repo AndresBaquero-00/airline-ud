@@ -1,14 +1,14 @@
-import { Query, Report, Response, SegmentInfo } from "../interfaces";
+import { Query, Report, Response, SegmentInfo,SegmentRequest } from "../interfaces";
 import { Service } from "./Service";
 
 export class ReporteService extends Service {
 
     public obtenerReporte(data: Query): Promise<Response<Report[]>>;
-    public obtenerReporte(data: SegmentInfo): Promise<Response<Report[]>>;
+    public obtenerReporte(data: SegmentRequest): Promise<Response<Report[]>>;
 
     public obtenerReporte(data: any): Promise<Response<Report[]>> {
         if ('aeropuertos' in data) {
-            const info = data as SegmentInfo;
+            const info = data as SegmentRequest;
             return this.get('reporte/segmentos', {
                 segmentInfo: info
             });

@@ -21,13 +21,13 @@ export const VueloPage = () => {
     const [pilotos, setPilotos] = useState([] as PilotResponse[]);
     const [reportes, setReportes] = useState([] as Report[]);
     const { form, changeForm, setDataForm, validForm, resetForm } = useForm({
-        aerolinea: '',
-        numeroVuelo: '',
-        fecha: '',
-        piloto: '',
-        numSegmentos: '',
-        aeropuertos: [] as string[]
-    } as SegmentInfo);
+        airlineCode: '',
+        flightNumber: '',
+        flightDate: '',
+        pilotLicense: '',
+        numberOfSegments: '',
+        airportCodes: [] as string[]
+    } as SegmentRequest);
 
     /* Obtener datos de aerolíneas, aeropuertos y pilotos. */
     useEffect(() => {
@@ -57,15 +57,15 @@ export const VueloPage = () => {
 
     /* Obtener consecutivo por aerolínea. */
     useEffect(() => {
-        if (form.aerolinea !== '') {
+        if (form.airlineCode !== '') {
             setCargando(true);
-            aerolineaService.crearConsecutivo(form.aerolinea)
+            aerolineaService.crearConsecutivo(form.airlineCode)
                 .then(value => {
                     setCargando(false);
-                    setDataForm(['numeroVuelo'], [value.data.trace]);
+                    setDataForm(['flightNumber'], [value.data.trace]);
                 });
         }
-    }, [form.aerolinea]);
+    }, [form.airlineCode]);
 
     /* Obtener reporte de segmentos ingresados. */
     useEffect(() => {
@@ -103,8 +103,8 @@ export const VueloPage = () => {
                 variant="outlined"
                 label="Aerolínea*"
                 helperText="Seleccione la aerolínea."
-                name="aerolinea"
-                value={form.aerolinea}
+                name="airlineCode"
+                value={form.airlineCode}
                 onChange={changeForm}
             >
                 {
@@ -129,8 +129,8 @@ export const VueloPage = () => {
                     fullWidth
                     variant="outlined"
                     label="# de Vuelo*"
-                    name="numeroVuelo"
-                    value={form.numeroVuelo}
+                    name="flightNumber"
+                    value={form.flightNumber}
                     InputProps={{
                         readOnly: true
                     }}
@@ -140,8 +140,8 @@ export const VueloPage = () => {
                     variant="outlined"
                     type="date"
                     label="Fecha de Vuelo*"
-                    name="fecha"
-                    value={form.fecha}
+                    name="flightDate"
+                    value={form.flightDate}
                     onChange={changeForm}
                     InputLabelProps={{
                         shrink: true
@@ -161,8 +161,8 @@ export const VueloPage = () => {
                     variant="outlined"
                     label="Piloto*"
                     helperText="Seleccione el piloto."
-                    name="piloto"
-                    value={form.piloto}
+                    name="pilotLicense"
+                    value={form.pilotLicense}
                     onChange={changeForm}
                 >
                     {
@@ -181,25 +181,25 @@ export const VueloPage = () => {
                     variant="outlined"
                     label="# de Segmentos*"
                     type="number"
-                    name="numSegmentos"
-                    value={form.numSegmentos}
-                    error={form.numSegmentos !== '' && !(Number(form.numSegmentos) > 0)}
+                    name="numberOfSegments"
+                    value={form.numberOfSegments}
+                    error={form.numberOfSegments !== '' && !(Number(form.numberOfSegments) > 0)}
                     onChange={(e) => {
                         const { value } = e.target;
                         setMuestraSegmentos(false);
                         setReportes([] as Report[]);
-                        setDataForm(['numSegmentos', 'aeropuertos'], [value, [] as string[]]);
+                        setDataForm(['numberOfSegments', 'airportCodes'], [value, [] as string[]]);
                     }}
                     onBlur={(e) => {
-                        (Number(form.numSegmentos) > 0) && setMuestraSegmentos(true);
+                        (Number(form.numberOfSegments) > 0) && setMuestraSegmentos(true);
                     }}
                 />
             </Box>
             <CreaSegmentos
                 show={muestraSegmentos}
                 aeropuertos={aeropuertos}
-                numSegmentos={form.numSegmentos}
-                onChange={(aeropuertos: string[]) => setDataForm(['aeropuertos'], [aeropuertos])}
+                numSegmentos={form.numberOfSegments}
+                onChange={(aeropuertos: string[]) => setDataForm(['airportCodes'], [aeropuertos])}
             />
             <InfoAeropuertos 
                 show={validForm} 

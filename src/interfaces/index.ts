@@ -57,7 +57,7 @@ export interface SegmentRequest {
     flightNumber:string;
     flightDate:string;
     pilotLicense:string;
-    numberOfSgments:string;
+    numberOfSegments:string;
     airportCodes:string[];
 }
 
