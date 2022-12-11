@@ -14,6 +14,8 @@ export class Service {
             axios.post(`${this.api}/${endpoint}`, data)
                 .then(data => {
                     resolve(data.data);
+                }).catch(err => {
+                    reject(err);
                 });
         });
     }

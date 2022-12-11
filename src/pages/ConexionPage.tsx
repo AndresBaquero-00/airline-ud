@@ -6,7 +6,7 @@ import { useForm } from "../hooks";
 import { AerolineaService, AeropuertoService, PostService } from "../services";
 import { Loader } from "../components";
 import { FormLayout } from "../layouts";
-import { ConnectionInfo, Data, AirlinesResponse, ConnectionRequest, FlightsByAirline } from "../interfaces";
+import { AirlinesResponse, ConnectionRequest, FlightsByAirline,AirPortResponse } from "../interfaces";
 
 export const ConexionPage = () => {
     const aerolineaService = useMemo(() => new AerolineaService(), []);
@@ -16,8 +16,8 @@ export const ConexionPage = () => {
     const [aerolineas, setAerolineas] = useState([] as AirlinesResponse[]);
     const [vuelosOrigen, setVuelosOrigen] = useState([] as FlightsByAirline[]);
     const [vuelosDestino, setVuelosDestino] = useState([] as FlightsByAirline[]);
-    const [aeropuertosOrigen, setAeropuertosOrigen] = useState([] as Data[]);
-    const [aeropuertosDestino, setAeropuertosDestino] = useState([] as Data[]);
+    const [aeropuertosOrigen, setAeropuertosOrigen] = useState([] as AirPortResponse[]);
+    const [aeropuertosDestino, setAeropuertosDestino] = useState([] as AirPortResponse[]);
     const { form, changeForm, validForm, resetForm, setDataForm } = useForm({
         airlineOrigin: '',
         airlineDestiny: '',
@@ -32,7 +32,11 @@ export const ConexionPage = () => {
         aerolineaService.obtenerAerolineas()
             .then(value => {
                 setCargando(false);
-                setAerolineas(value.data);
+                setAerolineas((value.state)?value.data:[] as AirlinesResponse[]);
+                if(!value.state)
+                    swal('Error', value.message, 'error');
+            }).catch(err =>{
+                swal('Error', err, 'error');
             });
 
         setCargando(true);
@@ -44,9 +48,12 @@ export const ConexionPage = () => {
             aerolineaService.obtenerVuelos(form.airlineOrigin)
                 .then(value => {
                     setCargando(false);
-                    setVuelosOrigen(value.data);
-                    setAeropuertosOrigen([] as Data[]);
+                    setVuelosOrigen((value.state)?value.data:[] as FlightsByAirline[]);
+                    setAeropuertosOrigen([] as AirPortResponse[]);
                     setDataForm(['flightOrigin', 'airportOrigin'], ['', '']);
+                    
+                    if(!value.state)
+                        swal('Error', value.message, 'error');
                 });
 
             setCargando(true);
@@ -60,8 +67,10 @@ export const ConexionPage = () => {
                 .then(value => {
                     setCargando(false);
                     setVuelosDestino(value.data);
-                    setAeropuertosDestino([] as Data[]);
+                    setAeropuertosDestino([] as AirPortResponse[]);
                     setDataForm(['flightDestiny', 'airportDestiny'], ['', '']);
+                }).catch(err =>{
+                    swal('Error', err, 'error');
                 });
 
             setCargando(true);
@@ -75,7 +84,7 @@ export const ConexionPage = () => {
                 .then(value => {
                     setCargando(false);
                     setAeropuertosOrigen(value.data);
-                    setDataForm(['aeropuertoOrigen'], ['', '']);
+                        setDataForm(['airportOrigin'], ['', '']);
                 });
 
             setCargando(true);
@@ -89,24 +98,24 @@ export const ConexionPage = () => {
                 .then(value => {
                     setCargando(false);
                     setAeropuertosDestino(value.data);
-                    setDataForm(['aeropuertoDestino'], ['', '']);
+                    setDataForm(['airportDestiny'], ['', '']);
                 });
 
             setCargando(true);
         }
     }, [form.flightDestiny]);
 
-    const enviar = function (e: React.FormEvent) {
+    const enviar = (e: React.FormEvent) => {
         e.preventDefault();
         postService.crearConexion(form)
             .then(value => {
                 setCargando(false);
                 resetForm();
-                if (value.state) {
+                if (value.state)
                     swal('Registro exitoso', 'La conexión ha sido creada satisfactoriamente', 'success');
-                } else {
+                else
                     swal('Error', value.message, 'error');
-                }
+                
             });
     }
 
@@ -183,9 +192,9 @@ export const ConexionPage = () => {
                         aeropuertosOrigen.map((airport, index) => (
                             <MenuItem
                                 key={index}
-                                value={airport.id}
+                                value={airport.airportCode}
                             >
-                                {airport.name}
+                                {airport.airportName}
                             </MenuItem>
                         ))
                     }
@@ -208,7 +217,7 @@ export const ConexionPage = () => {
                 {
                     aerolineas.map((airline, index) => (
                         <MenuItem
-                            key={airline.airlineCode}
+                            key={index}
                             value={airline.airlineCode}
                         >
                             {airline.airlineName}
@@ -258,9 +267,9 @@ export const ConexionPage = () => {
                         aeropuertosDestino.map((airport, index) => (
                             <MenuItem
                                 key={index}
-                                value={airport.id}
+                                value={airport.airportCode}
                             >
-                                {airport.name}
+                                {airport.airportName}
                             </MenuItem>
                         ))
                     }

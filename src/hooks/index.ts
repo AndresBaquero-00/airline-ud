@@ -14,7 +14,7 @@ export const useForm = function <T>(initialForm: T) {
                 return (data > 0);
             }
         });
-        
+        //console.log("Form: " + JSON.stringify(form) + "\n");
         setValidForm(validForm);
     }, [form]);
 
