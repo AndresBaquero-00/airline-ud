@@ -4,7 +4,7 @@ import { Search } from "@mui/icons-material";
 
 import { useForm } from "../hooks";
 import { AeropuertoService, ReporteService } from "../services";
-import { Data, Itinerario, Query } from "../interfaces";
+import { AirPortResponse, Itinerario, Query } from "../interfaces";
 import { Loader, MuestraItinerarios } from "../components";
 
 export const ReportePage = () => {
@@ -13,7 +13,7 @@ export const ReportePage = () => {
     const media = useMediaQuery('(max-width: 600px)');
     const [cargando, setCargando] = useState(false);
     const [openModal, setOpenModal] = useState(false);
-    const [aeropuertos, setAeropuertos] = useState([] as Data[]);
+    const [aeropuertos, setAeropuertos] = useState([] as AirPortResponse[]);
     const [reportes, setReportes] = useState([] as Itinerario[][]);
     const { form, changeForm, validForm, resetForm } = useForm({
         aeropuertoOrigen: '',
@@ -22,7 +22,7 @@ export const ReportePage = () => {
     } as Query);
 
     /* Obtener datos de aeropuertos. */
-    /*useEffect(() => {
+    useEffect(() => {
         aeropuertoService.obtenerAeropuertos()
             .then(value => {
                 setAeropuertos(value.data);
@@ -30,7 +30,7 @@ export const ReportePage = () => {
             });
 
         setCargando(true);
-    }, []);*/
+    }, []);
 
     const enviar = function (e: React.FormEvent) {
         e.preventDefault();
@@ -112,9 +112,9 @@ export const ReportePage = () => {
                             aeropuertos.map((airport, index) => (
                                 <MenuItem
                                     key={index}
-                                    value={airport.id}
+                                    value={airport.airportCode}
                                 >
-                                    {airport.name}
+                                    {airport.airportName}
                                 </MenuItem>
                             ))
                         }
@@ -133,9 +133,9 @@ export const ReportePage = () => {
                             aeropuertos.map((airport, index) => (
                                 <MenuItem
                                     key={index}
-                                    value={airport.id}
+                                    value={airport.airportCode}
                                 >
-                                    {airport.name}
+                                    {airport.airportName}
                                 </MenuItem>
                             ))
                         }

@@ -68,7 +68,7 @@ export const VueloPage = () => {
     }, [form.airlineCode]);
 
     /* Obtener reporte de segmentos ingresados. */
-   /* useEffect(() => {
+    useEffect(() => {
         if (validForm) {
             setCargando(true);
             reporteService.obtenerReporte(form)
@@ -77,7 +77,7 @@ export const VueloPage = () => {
                     setReportes(value.data);
                 });
         }
-    }, [validForm]);*/
+    }, [validForm]);
 
     const enviar = function (e: React.FormEvent) {
         e.preventDefault();
